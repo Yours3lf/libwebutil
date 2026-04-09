@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WEBUTIL_H
+#define WEBUTIL_H
 
 #include <vector>
 #include <algorithm>
@@ -168,3 +169,5 @@ static std::string urlSafeBase64(const std::string& input) {
 
     return out;
 }
+
+#endif
