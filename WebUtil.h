@@ -170,4 +170,51 @@ static std::string urlSafeBase64(const std::string& input) {
     return out;
 }
 
+extern "C" void base64_encode(const char *src, size_t srclen, char *out, size_t *outlen, int flags);
+
+extern "C" int base64_decode(const char *src, size_t srclen, char *out, size_t *outlen, int flags);
+
+std::string encodeBase64Url(const char* data, size_t len)
+{
+    std::string str;
+    {
+        str.resize(len * 2);
+        size_t size = str.size();
+        base64_encode(data, len, str.data(), &size, 0);
+        str.resize(size);
+        str = urlSafeBase64(str);
+    }
+
+    return str;
+}
+
+std::string encodeBase64Url(const std::string& str)
+{
+    return encodeBase64Url(str.data(), str.size());
+}
+
+std::string decodeBase64Url(const char* data, uint32_t len)
+{
+    std::string normalisedStr;
+    normalisedStr.resize(len);
+    std::copy(data, data + len, normalisedStr.data());
+    normalisedStr = normalizeBase64(normalisedStr);
+    
+    std::string str;
+    {
+        str.resize(len);
+        size_t size = str.size();
+        int res = base64_decode(normalisedStr.data(), normalisedStr.size(), str.data(), &size, 0);
+        assert(res == 1);
+        str.resize(size);
+    }
+
+    return str;
+}
+
+std::string decodeBase64Url(const std::string& str)
+{
+    return decodeBase64Url(str.data(), str.size());
+}
+
 #endif
