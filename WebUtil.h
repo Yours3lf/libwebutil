@@ -174,7 +174,7 @@ extern "C" void base64_encode(const char *src, size_t srclen, char *out, size_t 
 
 extern "C" int base64_decode(const char *src, size_t srclen, char *out, size_t *outlen, int flags);
 
-std::string encodeBase64Url(const char* data, size_t len)
+inline std::string encodeBase64Url(const char* data, size_t len)
 {
     std::string str;
     {
@@ -188,12 +188,12 @@ std::string encodeBase64Url(const char* data, size_t len)
     return str;
 }
 
-std::string encodeBase64Url(const std::string& str)
+inline std::string encodeBase64Url(const std::string& str)
 {
     return encodeBase64Url(str.data(), str.size());
 }
 
-std::string decodeBase64Url(const char* data, uint32_t len)
+inline std::string decodeBase64Url(const char* data, uint32_t len)
 {
     std::string normalisedStr;
     normalisedStr.resize(len);
@@ -212,7 +212,7 @@ std::string decodeBase64Url(const char* data, uint32_t len)
     return str;
 }
 
-std::string decodeBase64Url(const std::string& str)
+inline std::string decodeBase64Url(const std::string& str)
 {
     return decodeBase64Url(str.data(), str.size());
 }
