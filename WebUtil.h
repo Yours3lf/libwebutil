@@ -78,8 +78,6 @@ static void printRawData(const std::vector<uint8_t>& raw)
 template<typename t>
 static const t* getRawData(const std::vector<char>& data, uint32_t& payloadByteOffset, uint32_t length = 0)
 {
-    const t* d = (const t*)(data.data() + payloadByteOffset);
-
     uint32_t l = 0;
 
     if (length != 0)
@@ -91,9 +89,11 @@ static const t* getRawData(const std::vector<char>& data, uint32_t& payloadByteO
         l = sizeof(t);
     }
 
-    //make sure we don't overrun our buffer
-    if (payloadByteOffset + l > data.size()) { return nullptr;  }
+    // uint32 addition wraps, so a crafted length near 2^32 passes a check against a short buffer.
+    if (uint64_t(payloadByteOffset) + uint64_t(l) > uint64_t(data.size()))
+        return nullptr;
 
+    const t* d = (const t*)(data.data() + payloadByteOffset);
     payloadByteOffset += l;
 
     return d;
